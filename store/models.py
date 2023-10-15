@@ -1,5 +1,6 @@
 from django.db import models
 import datetime
+from django.utils import timezone
 
 #Product Categories
 class Category(models.Model):
@@ -16,11 +17,11 @@ class Category(models.Model):
 class Store(models.Model):
     name=models.CharField(max_length=50)
     category=models.ForeignKey(Category, on_delete=models.SET_NULL, null=True)
-    desription=models.CharField(max_length=500, blank=True)
+    description=models.CharField(max_length=500, blank=True)
     logo=models.ImageField(upload_to='uploads/Store_logo', blank=True)
 
     def __str__(self):
-        return f'{self.name} {self.desription}'
+        return f'{self.name} {self.description}'
 
 #Customers
 class Customer(models.Model):
@@ -41,6 +42,13 @@ class Product(models.Model):
     description=models.CharField(max_length=500, blank=True)
     store=models.ForeignKey(Category, on_delete=models.SET_DEFAULT, default=1)
     image=models.ImageField(upload_to='uploads/product')
+    # Add Sale option
+    on_sale=models.BooleanField(default=False)
+    sale_price=models.DecimalField(max_digits=7, decimal_places=2, default=0 )
+
+
+    def __str__(self):
+        return f'{self.name}'    
 
 #Customer Orders
 class Order(models.Model):
@@ -52,7 +60,7 @@ class Order(models.Model):
     city=models.CharField(max_length=50)
     address=models.CharField(max_length=50)
     phone=models.CharField(max_length=20)
-    date=models.DateField(default=datetime.datetime.today)
+    date=models.DateField(default=timezone.now)
     completed=models.BooleanField(default=False)
 
 
