@@ -1,4 +1,4 @@
-from .models import Product, Cart, CartItem
+from .models import Product, Cart, CartItem, Customer
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.decorators import login_required
@@ -21,6 +21,9 @@ def signup(request):
             user.refresh_from_db()  # Load the profile instance created by the signal
             user.email = form.cleaned_data.get('email')
             user.save()
+
+            customer = Customer.objects.create(email=user.email)
+
             raw_password = form.cleaned_data.get('password1')
             user = authenticate(username=user.username, password=raw_password)
             login(request, user)
@@ -31,7 +34,7 @@ def signup(request):
 
 
 
-@login_required
+#@login_required
 def add_to_cart(request, product_id):
     product = get_object_or_404(Product, id=product_id)
     cart, created = Cart.objects.get_or_create(user=request.user)
@@ -41,7 +44,7 @@ def add_to_cart(request, product_id):
         cart_item.save()
     return redirect('view_cart')
 
-@login_required
+#@login_required
 def view_cart(request):
     cart, created = Cart.objects.get_or_create(user=request.user)
     cart_items = CartItem.objects.filter(cart=cart)
@@ -51,7 +54,7 @@ def view_cart(request):
         'cart_items': cart_items,
         'total_price': total_price,
     }
-    return render(request, 'cart/view_cart.html', context)
+    return render(request, 'cart.html', context)
 
 @login_required
 def remove_from_cart(request, item_id):
