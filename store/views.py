@@ -33,6 +33,9 @@ def signup(request):
     return render(request, 'registration/signup.html', {'form': form})
 
 
+def login(request):
+    return render(request, 'registration/login.html')
+
 
 #@login_required
 def add_to_cart(request, product_id):
@@ -56,7 +59,7 @@ def view_cart(request):
     }
     return render(request, 'cart.html', context)
 
-@login_required
+#@login_required
 def remove_from_cart(request, item_id):
     cart_item = get_object_or_404(CartItem, id=item_id)
     cart_item.delete()
