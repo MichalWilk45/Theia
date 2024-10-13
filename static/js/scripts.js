@@ -5,3 +5,19 @@
 */
 // This file is intentionally blank
 // Use this file to add JavaScript to your project
+
+function addToCart(productId) {
+    event.preventDefault(); 
+    console.log(productId);
+    console.log("hello");
+    $.ajax({
+        url: '/add-to-cart/' + productId,
+        type: 'GET',
+        success: function(response) {
+            console.log(response);
+        },
+        error: function(xhr, status, error) {
+            console.log(error);
+        }
+    });
+}
